@@ -1,0 +1,12 @@
+streamlit
+seaborn
+spacy
+python-dotenv
+ipykernel
+nltk
+scikit-learn
+xgboost
+transformers
+datasets
+torch
+accelerate>=0.26.0
