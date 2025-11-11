@@ -1,5 +1,5 @@
 import pandas as pd
-from pathlib import Path
+from pathlib import Path # To manipulate file paths easier as objects rather than just strings
 import sys
 
 sys.path.append(str(Path(__file__).resolve().parent / "src"))
