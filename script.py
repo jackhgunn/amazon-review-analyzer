@@ -12,7 +12,8 @@ dataset_df = pd.read_csv(dataset_path)
 
 dataset_df["cleaned_text"] = dataset_df["text_"].apply(preprocess_text)
 POS_Tagging = True
-dataset_df = extract_features(dataset_df, include_pos=POS_Tagging)
+Sentiment_Analysis = True
+dataset_df = extract_features(dataset_df, include_pos=POS_Tagging, include_sentiment=Sentiment_Analysis)
 
 processed_dataset_path = Path(__file__).resolve().parent / "processed-fake-reviews.csv"
 dataset_df.to_csv(processed_dataset_path, index=False)
