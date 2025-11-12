@@ -12,7 +12,7 @@ df = pd.read_csv(df_path)
 print(f"Dataset loaded with {len(df)} reviews")
 print(f"Columns in dataset: {list(df.columns)}")
 
-# Prepare features (X) by removing text columns and the label colum
+# Prepare features (X) by removing text columns and the label column
 X = pd.get_dummies(
     df.drop(columns=["label", "text_", "cleaned_text"]), 
     columns=["category"]
@@ -28,7 +28,9 @@ print(f"Labels distribution:")
 print(y.value_counts())
 
 
-
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
 
 
 # Create XGBoost classifier
