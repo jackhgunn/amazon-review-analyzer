@@ -35,7 +35,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # Feature importances
-'''importances = model.feature_importances_
+importances = model.feature_importances_
 feature_importance_df = pd.DataFrame({
     'feature': X.columns,
     'importance': importances
@@ -43,7 +43,7 @@ feature_importance_df = pd.DataFrame({
 
 print(feature_importance_df)
 plot_importance(model)
-pyplot.show()'''
+pyplot.show()
 
 
 # Tune hyperparameters
@@ -130,7 +130,7 @@ print(f"\nModel saved successfully in '{model_dir}' directory!")'''
 
 
 # Feature selection
-# Only keep features with importance >= thresh
+'''# Only keep features with importance >= thresh
 thresh = 0.002
 
 selection = SelectFromModel(model, threshold=thresh, prefit=True)
@@ -184,4 +184,4 @@ selection_model_metadata = {
 with open(model_dir / f"selection_{thresh}_model_metadata.json", "w") as f:
     json.dump(selection_model_metadata, f, indent=2)
     
-print(f"\nModel saved successfully in '{model_dir}' directory!")
+print(f"\nModel saved successfully in '{model_dir}' directory!")'''
