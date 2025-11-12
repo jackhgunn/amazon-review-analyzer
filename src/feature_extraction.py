@@ -12,7 +12,7 @@ sia = SentimentIntensityAnalyzer()
 
 WORD_RE = re.compile(r"[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?")
 
-def _doc_tokens_sentences(text: str):
+def _doc_tokens_sentences(text):
     text = text if isinstance(text, str) else ""
     doc = nlp(text)
 
