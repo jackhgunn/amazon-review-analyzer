@@ -56,13 +56,11 @@ def extract_features(df, include_pos=False, include_sentiment=False):
     )
     df["num_exclamation_marks"] = df["_raw"].str.count("!")
     df["num_question_marks"]    = df["_raw"].str.count(r"\?")
-
     df["contraction_pct"] = df.apply(
         lambda r: (sum("'" in w[1:-1] for w in r["_words"]) / r["num_words"]) if r["num_words"] else 0.0,
         axis=1
     )
-    if "rating" in df.columns:
-        df["is_extreme_star"] = df["rating"].isin([1.0, 5.0])
+    df["is_extreme_star"] = df["rating"].isin([1.0, 5.0])
 
     # POS features
     if include_pos:

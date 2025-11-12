@@ -72,12 +72,12 @@ model_dir = Path("./model")
 model_dir.mkdir(parents=True, exist_ok=True)
 
 # Save the trained model
-joblib.dump(model, model_dir / "review_classifier.pkl")
+joblib.dump(model, model_dir / "initial_review_classifier.pkl")
 
 # Save feature names for future use
 feature_names = X.columns.tolist()
 
-with open(model_dir / "feature_names.json", "w") as f:
+with open(model_dir / "initial_feature_names.json", "w") as f:
     json.dump(feature_names, f)
 
 # Save model metadata
@@ -89,7 +89,7 @@ model_metadata = {
     "test_samples": len(X_test)
 }
 
-with open(model_dir / "model_metadata.json", "w") as f:
+with open(model_dir / "initial_model_metadata.json", "w") as f:
     json.dump(model_metadata, f, indent=2)
 
 print(f"\nModel saved successfully in '{model_dir}' directory!")
