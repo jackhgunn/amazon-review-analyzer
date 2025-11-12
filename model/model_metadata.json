@@ -1,5 +1,5 @@
 {
-  "test_auc_score": 0.8511111235292554,
+  "test_auc_score": 0.8582576690767265,
   "num_features": 18,
   "label_mapping": {
     "OR": 1,
