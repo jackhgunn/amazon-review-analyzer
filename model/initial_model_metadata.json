@@ -1,0 +1,10 @@
+{
+  "test_auc_score": 0.960850486985919,
+  "num_features": 59,
+  "label_mapping": {
+    "OR": 1,
+    "CG": 0
+  },
+  "training_samples": 29111,
+  "test_samples": 7278
+}
