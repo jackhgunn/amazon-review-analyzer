@@ -41,7 +41,7 @@ def get_xgb_model():
 
     return {"best_model": best_model}
 
-def extract_features(text, rating=5.0, include_pos=False, include_sentiment=False):
+def extract_features(text, rating=5.0, include_pos=True, include_sentiment=False):
     from feature_extraction import extract_features as fe_extract_features
 
     nlp, sia = get_nlp_models()
@@ -50,7 +50,7 @@ def extract_features(text, rating=5.0, include_pos=False, include_sentiment=Fals
     df = pd.DataFrame([{"cleaned_text": text, "rating": rating}])
 
     # Extract features using the feature extraction function
-    df_features = fe_extract_features(df, include_pos=include_pos, include_sentiment=include_sentiment)
+    df_features = fe_extract_features(df, nlp, sia, include_pos=include_pos, include_sentiment=include_sentiment)
 
     return df_features
 

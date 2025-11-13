@@ -12,7 +12,7 @@ sia = SentimentIntensityAnalyzer()
 
 WORD_RE = re.compile(r"[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?")
 
-def _doc_tokens_sentences(text):
+def _doc_tokens_sentences(text, nlp):
     text = text if isinstance(text, str) else ""
     doc = nlp(text)
 
@@ -24,10 +24,10 @@ def _doc_tokens_sentences(text):
 def _pos_counter(doc):
     return Counter(t.pos_ for t in doc if not t.is_space)
 
-def extract_features(df, include_pos=False, include_sentiment=False):
+def extract_features(df, nlp=nlp, sia=sia, include_pos=True, include_sentiment=True):
     df = df.copy()
 
-    processed = df["cleaned_text"].apply(_doc_tokens_sentences)
+    processed = df["cleaned_text"].apply(lambda x: _doc_tokens_sentences(x, nlp))
 
     df["_doc"]   = processed.apply(lambda x: x[0])
     df["_toks"]  = processed.apply(lambda x: x[1])
