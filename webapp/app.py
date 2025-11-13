@@ -63,7 +63,7 @@ def prepare_features_for_prediction(text, category="unknown", rating=5.0):
 
     # Load the feature names your model expects
     sys.path.append(str(Path(__file__).resolve().parent.parent / "model/"))
-    with open("../model/best_feature_names.json", "r") as f:
+    with open("best_feature_names.json", "r") as f:
         feature_names = json.load(f)
     
     # Add category features df_features
