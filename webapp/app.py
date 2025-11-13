@@ -20,11 +20,13 @@ def get_nlp_models():
     # Download VADER lexicon if not already present and only if you included sentiment analysis as a feature
     try:
         nltk.data.find("vader_lexicon")
-    except LookupError:
+    except:
         nltk.download("vader_lexicon", quiet=True)
 
     # Load spaCy model (disable unused components for speed). This will be used to tokenize our reviews
     nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+    nlp.add_pipe("sentencizer")
+
     analyzer = SentimentIntensityAnalyzer()
 
     return nlp, analyzer
