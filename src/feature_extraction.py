@@ -5,10 +5,10 @@ import spacy
 from collections import Counter
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
-nlp.add_pipe("sentencizer")
+#nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+#nlp.add_pipe("sentencizer")
 
-sia = SentimentIntensityAnalyzer()
+#sia = SentimentIntensityAnalyzer()
 
 WORD_RE = re.compile(r"[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?")
 
@@ -24,7 +24,7 @@ def _doc_tokens_sentences(text, nlp):
 def _pos_counter(doc):
     return Counter(t.pos_ for t in doc if not t.is_space)
 
-def extract_features(df, nlp=nlp, sia=sia, include_pos=True, include_sentiment=True):
+def extract_features(df, nlp, sia, include_pos=True, include_sentiment=True):
     df = df.copy()
 
     processed = df["cleaned_text"].apply(lambda x: _doc_tokens_sentences(x, nlp))
