@@ -5,10 +5,6 @@ import spacy
 from collections import Counter
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-#nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
-#nlp.add_pipe("sentencizer")
-
-#sia = SentimentIntensityAnalyzer()
 
 WORD_RE = re.compile(r"[A-Za-z0-9]+(?:'[A-Za-z0-9]+)?")
 

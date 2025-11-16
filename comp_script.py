@@ -29,6 +29,9 @@ MODEL_PATH = os.path.join(
     os.path.dirname(__file__), "model", "best_review_classifier.pkl"
 )
 
+feature_names_path = "model/best_feature_names.json"
+with open(feature_names_path, "r") as f:
+        feature_names = json.load(f)
 
 sys.path.append(str(Path(__file__).resolve().parent / "src"))
 
@@ -41,6 +44,7 @@ def load_nltk_and_spacy():
 
     # Load spaCy model (disable unused components for speed). This will be used to tokenize our reviews
     nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+    nlp.add_pipe("sentencizer")
     analyzer = SentimentIntensityAnalyzer()
 
     return nlp, analyzer
@@ -56,14 +60,14 @@ def get_xgb_model():
 
 def extract_features(text, rating=5.0, include_pos=True, include_sentiment=True):
     from feature_extraction import extract_features as fe_extract_features
-
+    
     nlp, sia = load_nltk_and_spacy()
 
     # Create a DataFrame with the input text and rating
     df = pd.DataFrame([{"cleaned_text": text, "rating": rating}])
 
     # Extract features using the feature extraction function
-    df_features = fe_extract_features(df, include_pos=include_pos, include_sentiment=include_sentiment)
+    df_features = fe_extract_features(df, nlp, sia, include_pos=include_pos, include_sentiment=include_sentiment)
 
     return df_features
 
@@ -86,8 +90,8 @@ def prepare_features(text, feature_names, category="unknown", rating=5.0):
     # Return features in the exact order the model expects
     return df_features[feature_names]
 
-def xgb_predict(text, model, category="unknown", rating=5.0):
-    features = prepare_features(text, category=category, rating=rating)
+'''def xgb_predict(text, model, category="unknown", rating=5.0):
+    features = prepare_features(text, feature_names, category=category, rating=rating)
 
     prediction = model.predict(features)[0]
     probabilities = model.predict_proba(features)[0]
@@ -95,32 +99,35 @@ def xgb_predict(text, model, category="unknown", rating=5.0):
     
     label = "Human" if prediction == 1 else "AI"
 
-    return label, confidence, probabilities.tolist()
+    return label, confidence, probabilities.tolist()'''
 
 
-def load_test_data():
-    """Load the hidden test set"""
-    # In actual competition, this would load from a file
-    # Until the competition, you will just get one sample
-    test_data = pd.DataFrame(
-        [
-            {
-                "category": "Kindle_Store_5",
-                "rating": 3.0,
-                "label": "CG",  # AI-generated
-                "text_": """Eva is on her to find a way to escape her abusive mother. When she meets a handsome stranger she doesn't know is the man she wants but the man she wants is strong and handsome. She is in love with him and will do anything to get her happily ever after.
+def load_test_data(csv_path="comp_reviews.csv"):
+    """Load the test set"""
+    if not Path(csv_path).exists():
+        print(f"❌ Error: Test data file '{csv_path}' not found!")
+        print("Please place 'comp_reviews.csv' in the same directory as this script")
+        return None
 
-I loved this book! I can't wait to see how the next book comes out!I received a free copy of this book from the author for an honest review.
+    try:
+        test_data = pd.read_csv(csv_path)
 
-This book was so good. I loved it. I loved the character development. I loved the relationship between the two main characters. The romance was real, and the story flowed at a great pace. It was a fun read. I would definitely recommend this book to anyone.I received this book for an honest review.  This is my first book by this author and I was very happy to see it.  I love the characters and the plot.  I will definitely be looking for more by this author.  This is a great series and I look forward to reading more from this author""",
-            }
-        ]
-    )
+        # Verify required columns exist
+        required_cols = ["category", "rating", "label", "text_"]
+        missing_cols = [col for col in required_cols if col not in test_data.columns]
 
-    # Convert labels: CG (AI) = 0, OR (Human) = 1
-    test_data["label_numeric"] = test_data["label"].map({"CG": 0, "OR": 1})
+        if missing_cols:
+            print(f"❌ Error: Missing required columns: {missing_cols}")
+            return None
 
-    return test_data
+        # Convert labels: CG (AI) = 0, OR (Human) = 1
+        test_data["label_numeric"] = test_data["label"].map({"CG": 0, "OR": 1})
+
+        return test_data
+
+    except Exception as e:
+        print(f"❌ Error loading test data: {str(e)}")
+        return None
 
 
 def main():
@@ -166,8 +173,8 @@ def main():
     print("\nExtracting features...")
     feature_dfs = []
     for idx, row in test_df.iterrows():
-        features = extract_features(row["text_"], row["rating"], nlp, analyzer)
-        features = prepare_features(features, feature_names, row["category"])
+        #features = extract_features(row["text_"], row["rating"], include_pos=True, include_sentiment=True)
+        features = prepare_features(row["text_"], feature_names, row["category"], row["rating"])
         feature_dfs.append(features)
 
     X_test = pd.concat(feature_dfs, ignore_index=True)

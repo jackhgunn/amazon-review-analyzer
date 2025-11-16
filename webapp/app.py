@@ -41,7 +41,7 @@ def get_xgb_model():
 
     return {"best_model": best_model}
 
-def extract_features(text, rating=5.0, include_pos=True, include_sentiment=False):
+def extract_features(text, rating=5.0, include_pos=True, include_sentiment=True):
     from feature_extraction import extract_features as fe_extract_features
 
     nlp, sia = get_nlp_models()
